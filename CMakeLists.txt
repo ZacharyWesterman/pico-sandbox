@@ -13,10 +13,16 @@ pico_sdk_init()
 
 add_executable(test
 	test.cpp
+	soil.cpp
 )
 
 # Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(test pico_stdlib pico_binary_info hardware_i2c)
+target_link_libraries(
+	test
+	pico_stdlib
+	pico_binary_info
+	hardware_i2c
+)
 
 # Enable USB debug, disable UART debug
 pico_enable_stdio_usb(test 1)
