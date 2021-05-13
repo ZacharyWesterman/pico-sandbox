@@ -14,6 +14,7 @@ pico_sdk_init()
 add_executable(test
 	test.cpp
 	soil.cpp
+	lcd.cpp
 )
 
 # Add pico_stdlib library which aggregates commonly used features

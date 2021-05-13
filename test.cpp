@@ -4,6 +4,7 @@
 #include "hardware/i2c.h"
 
 #include "soil.hpp"
+#include "lcd.hpp"
 
 void setup_i2c(i2c_inst_t* i2c, uint sda, uint scl)
 {
@@ -19,16 +20,33 @@ int main() {
 	stdio_init_all();
 
 	setup_i2c(i2c0, 4, 5);
-	soil sensor (i2c0);
+	const soil sensor (i2c0);
+	const lcd screen (i2c0);
 
 	int iteration = 0;
+	char buf[32];
+
+	int lastTemp = -999;
+	int lastMoist = -999;
+
 	while(true)
 	{
-		float temperature = sensor.temperature('F');
+		int temperature = sensor.temperature('F');
 		int moisture = sensor.moisture();
-		printf("[%04d] %d F, %d Capacitive\n", iteration, (int)temperature, moisture);
 
-		sleep_ms(3000);
+		if ((lastTemp != temperature) || (lastMoist != moisture))
+		{
+			screen.clear();
+			screen.cursor(0,0);
+			sprintf(buf, "%3d F, %4d Cpc", temperature, moisture);
+			screen.string(buf);
+
+			lastTemp = temperature;
+			lastMoist = moisture;
+		}
+
+		sleep_ms(1000);
+
 		iteration += 1;
 	}
 
